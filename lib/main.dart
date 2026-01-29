@@ -1,73 +1,75 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
-// Root widget - entry point for the app
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Simple Quiz',
+      debugShowCheckedModeBanner: false,
+      title: 'Coffee Shop Quiz',
       theme: ThemeData(
-        primarySwatch: Colors.red,
-        scaffoldBackgroundColor: Colors.grey,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown),
+        fontFamily: 'Roboto',
       ),
-      home: MyHomePage(), // The homepage where the quiz runs
+      home: const MyHomePage(),
     );
   }
 }
 
-// Stateful widget for quiz logic
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool quizStarted = false; // Determines if the quiz has started
-  int currentQuestionIndex = 0; // Tracks the current question index
-  int score = 0; // The player's score
-  bool answered = false; // Flag to check if the question has been answered
+  bool quizStarted = false;
+  int currentQuestionIndex = 0;
+  int score = 0;
+  bool answered = false;
 
-  // List of questions, answers, and correct answer index
   final List<Map<String, dynamic>> questions = [
     {
-      'question': 'Which feature would help a coffee shop the most?:',
+      'question': 'Which feature would help a coffee shop the most?',
       'answers': [
         'Online table reservation system',
         'Digital queue number system',
-        'Inventory alerts for coffee beans and supplies', // Correct answer (Index 2)
+        'Inventory alerts for coffee beans and supplies',
         'Customer feedback form',
       ],
-      'correct': 2, // Index of the correct answer
+      'correct': 2,
     },
     {
       'question':
-          'Which feature would help a coffee shop improve customer experience?:',
+          'Which feature would help a coffee shop improve customer experience?',
       'answers': [
         'Mobile app for ordering ahead',
         'In-store Wi-Fi setup',
-        'Loyalty program for repeat customers', // Correct answer (Index 2)
+        'Loyalty program for repeat customers',
         'Daily specials board',
       ],
-      'correct': 2, // Index of the correct answer
+      'correct': 2,
     },
     {
       'question':
-          'Which feature would help a coffee shop streamline operations?:',
+          'Which feature would help a coffee shop streamline operations?',
       'answers': [
-        'Point-of-sale system with payment integration', // Correct answer (Index 0)
+        'Point-of-sale system with payment integration',
         'Social media marketing tools',
         'Employee scheduling app',
         'Customer seating layout planner',
       ],
-      'correct': 0, // Index of the correct answer
+      'correct': 0,
     },
   ];
 
-  // Start or restart the quiz
   void startQuiz() {
     setState(() {
       quizStarted = true;
@@ -77,27 +79,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // Handle the answer selection
   void answerQuestion(int index) {
     if (!answered) {
       setState(() {
-        answered = true; // Lock the answers after one is selected
-        // Check if the selected answer is correct
+        answered = true;
         if (index == questions[currentQuestionIndex]['correct']) {
-          score++; // Increase the score for a correct answer
+          score++;
         }
       });
     }
   }
 
-  // Move to the next question or end the quiz
   void nextQuestion() {
     setState(() {
       if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex++; // Move to the next question
-        answered = false; // Allow answering of the next question
+        currentQuestionIndex++;
+        answered = false;
       } else {
-        quizStarted = false; // End the quiz if no more questions
+        quizStarted = false;
       }
     });
   }
@@ -106,85 +105,111 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: Text('Coffee Shop Quiz'),
+        title: const Text('☕ Coffee Shop Quiz'),
+        centerTitle: true,
       ),
-      body: Center(
-        child: quizStarted
-            ? buildQuizView() // Display the quiz if started
-            : buildStartOrEndView(), // Display start/end screen
-      ),
-    );
-  }
-
-  // Start/End view: Shows the Start button and score at the end
-  Widget buildStartOrEndView() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (!quizStarted)
-          Text(
-            'Your Score: $score',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFF7EFE5), Color(0xFFE3CAA5)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: startQuiz, // Start or restart the quiz
-          child: Text(quizStarted ? 'Restart Quiz' : 'Start Quiz'),
         ),
-      ],
+        child: Center(child: quizStarted ? buildQuizCard() : buildStartCard()),
+      ),
     );
   }
 
-  // Quiz view: Shows the current question and answers
-  Widget buildQuizView() {
-    final question = questions[currentQuestionIndex];
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            question['question'],
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
-          // Dynamically create answer buttons
-          ...List.generate(4, (index) {
-            Color? buttonColor;
-            if (answered) {
-              buttonColor = index == question['correct']
-                  ? Colors
-                        .green // Correct answer -> green
-                  : Colors.red; // Incorrect answer -> red
-            }
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: ElevatedButton(
-                onPressed: answered
-                    ? null
-                    : () => answerQuestion(index), // Disable after answering
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      buttonColor, // Flash color based on answer correctness
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text(question['answers'][index]), // Display answer text
-              ),
-            );
-          }),
-          SizedBox(height: 20),
-          // Display the Next button after answering
-          if (answered)
-            ElevatedButton(
-              onPressed: nextQuestion, // Move to next question or end quiz
-              child: Text(
-                currentQuestionIndex < questions.length - 1
-                    ? 'Next'
-                    : 'End Quiz',
-              ),
+  Widget buildStartCard() {
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.all(24),
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Welcome to the Quiz',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
             ),
-        ],
+            const SizedBox(height: 16),
+            Text('Your Score: $score', style: const TextStyle(fontSize: 20)),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: startQuiz,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 14,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text('Start Quiz'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildQuizCard() {
+    final question = questions[currentQuestionIndex];
+
+    return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.all(24),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              question['question'],
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            ...List.generate(4, (index) {
+              Color? color;
+              if (answered) {
+                color = index == question['correct']
+                    ? Colors.green
+                    : Colors.red;
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: ElevatedButton(
+                  onPressed: answered ? null : () => answerQuestion(index),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: color,
+                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(question['answers'][index]),
+                ),
+              );
+            }),
+            const SizedBox(height: 16),
+            if (answered)
+              ElevatedButton(
+                onPressed: nextQuestion,
+                child: Text(
+                  currentQuestionIndex < questions.length - 1
+                      ? 'Next Question'
+                      : 'Finish Quiz',
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
