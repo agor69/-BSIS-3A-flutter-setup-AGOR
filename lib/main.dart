@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Simple Quiz',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
         scaffoldBackgroundColor: Colors.grey,
       ),
       home: MyHomePage(), // The homepage where the quiz runs
@@ -42,6 +42,28 @@ class _MyHomePageState extends State<MyHomePage> {
         'Customer feedback form',
       ],
       'correct': 2, // Index of the correct answer
+    },
+    {
+      'question':
+          'Which feature would help a coffee shop improve customer experience?:',
+      'answers': [
+        'Mobile app for ordering ahead',
+        'In-store Wi-Fi setup',
+        'Loyalty program for repeat customers', // Correct answer (Index 2)
+        'Daily specials board',
+      ],
+      'correct': 2, // Index of the correct answer
+    },
+    {
+      'question':
+          'Which feature would help a coffee shop streamline operations?:',
+      'answers': [
+        'Point-of-sale system with payment integration', // Correct answer (Index 0)
+        'Social media marketing tools',
+        'Employee scheduling app',
+        'Customer seating layout planner',
+      ],
+      'correct': 0, // Index of the correct answer
     },
   ];
 
@@ -83,7 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Local Business Quiz')),
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+        title: Text('Coffee Shop Quiz'),
+      ),
       body: Center(
         child: quizStarted
             ? buildQuizView() // Display the quiz if started
