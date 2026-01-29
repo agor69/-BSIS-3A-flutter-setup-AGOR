@@ -1,18 +1,10 @@
-# flutter_application_1
+Personalized Question
 
-A new Flutter project.
+Business / Service Name:
+Kaffee Café at Ateneo Ave.
 
-## Getting Started
+City / Municipality:
+Naga City
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# my-commits" 
-"# my-commits" 
+Problem the App Solves:
+The app helps Kaffee Café make ordering easier and faster for customers while helping staff manage daily tasks more efficiently. It also improves customer experience by making services more organized and convenient.
